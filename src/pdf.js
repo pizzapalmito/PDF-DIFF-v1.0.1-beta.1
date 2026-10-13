@@ -18,6 +18,32 @@ export async function renderPage(pdf,pageNumber,width=3200) {
 export function saveFile(data,name,type) {
   const url=URL.createObjectURL(new Blob([data],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);
 }
+// Evidence uses the same 1000-unit width as drawing markups, independently for each page.
+export async function buildReviewDocuments(original,revised,impact) {
+  const documents={old:original,new:revised};
+  const result=Object.fromEntries(Object.entries(documents).map(([side,pdf])=>[side,pdf?{hash:pdf.hash,name:pdf.name,pages:pdf.pages,pageHeights:{}}:null]));
+  const evidence=[];
+  for(const record of impact?.records||[])evidence.push(record?.before?.evidence,record?.after?.evidence);
+  for(const reference of impact?.references||[])evidence.push(reference?.before,reference?.after);
+  for(const location of evidence){
+    if(!location||!['old','new'].includes(location.side)||!Number.isInteger(location.page))continue;
+    const pdf=documents[location.side],descriptor=result[location.side];
+    if(!pdf||location.page<1||location.page>pdf.pages||descriptor.pageHeights[location.page]!==undefined)continue;
+    pdf.pageHeights??={};
+    if(pdf.pageHeights[location.page]===undefined){const page=await pdf.doc.getPage(location.page),view=page.getViewport({scale:1});pdf.pageHeights[location.page]=1000*view.height/view.width;}
+    descriptor.pageHeights[location.page]=pdf.pageHeights[location.page];
+  }
+  return result;
+}
+export async function renderEvidenceCrop(pdf,evidence,width=2400) {
+  if(!pdf||!evidence||!Number.isInteger(evidence.page)||evidence.page<1||evidence.page>pdf.pages)throw Error('Evidence PDF or page is unavailable.');
+  const rendered=await renderPage(pdf,evidence.page,width),rect=evidence.rect,height=1000*rendered.height/rendered.width;
+  if(!rect||![rect.x,rect.y,rect.w,rect.h].every(Number.isFinite)||rect.x<0||rect.y<0||rect.w<=0||rect.h<=0||rect.x+rect.w>1000+.001||rect.y+rect.h>height+.001)throw Error('Evidence area is outside the page.');
+  const scale=rendered.canvas.width/1000,crop=document.createElement('canvas');
+  crop.width=Math.max(1,Math.ceil(rect.w*scale));crop.height=Math.max(1,Math.ceil(rect.h*scale));
+  crop.getContext('2d').drawImage(rendered.canvas,rect.x*scale,rect.y*scale,rect.w*scale,rect.h*scale,0,0,crop.width,crop.height);
+  return crop;
+}
 export function paintComparison(canvas,revised,original,diff,opacity=50) {
   canvas.width=revised.width;canvas.height=revised.height;
   const ctx=canvas.getContext('2d');ctx.drawImage(revised,0,0);

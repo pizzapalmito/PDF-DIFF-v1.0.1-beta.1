@@ -10,7 +10,7 @@ For setup without launching: double-click **requirements.cmd**, or run `powershe
 
 For manual setup with an existing Node.js installation: `npm ci --include=dev`, then `npm run build` and `npm start`.
 
-For development: `npm run dev`. Validate with `npm test` and `npm run build`.
+For development: `npm run dev`. Validate with `npm test` and `npm run build`. Run `npm run test:browser` for the production-build browser suite. It uses installed Microsoft Edge and a temporary local preview on port 4322; the normal app remains on port 4321. Open `playwright-report/index.html` for the browser results.
 
 ## Drawing review
 
@@ -20,9 +20,24 @@ For development: `npm run dev`. Validate with `npm test` and `npm run build`.
 4. Click **Auto-cloud changes**, or choose **Revcloud** and drag a rectangle. Select a cloud to edit its label, note and review status. In Select mode, drag a markup to reposition it. Undo reverses annotation edits. Auto-cloud processes the currently selected page only.
 5. In **Electrical**, choose a device and click the drawing to place markers. Edit circuit and VA for each marker. Counts are per sheet; circuit summaries aggregate the loaded drawing set. VA defaults are editable placeholders, not code-prescribed values.
 6. **Export review** creates either an all-sheet reviewed PDF or a CSV register containing every annotation. The reviewed PDF is a raster copy with flattened markups, not editable PDF annotations. Detailed review notes and circuit data are included in CSV/JSON; the PDF shows cloud labels, note labels and device symbols.
-7. **Save review** downloads editable markups as JSON. Keep it with the PDFs. Use the folder icon beside Drawing set to load it. The revised PDF's SHA-256 fingerprint must match, even if the filename is the same. The original PDF need not be present to restore revised-sheet markups.
+7. **Save review** downloads editable markups and electrical impacts as version 2 JSON. Keep it with the PDFs. Use the folder icon beside Drawing set to load it. The revised PDF's SHA-256 fingerprint must match, even if the filename is the same. Reviews containing electrical changes or references require both matching PDFs. Annotation-only reviews, including older version 1 files, can be restored with the matching revised PDF alone.
 
-Shortcuts: **V** select, **C** cloud, **D** device, **N** note, **Ctrl+Z** undo, **Escape** select. Zoom and fit controls are in the drawing toolbar. A sheet selector remains available below the drawing on smaller screens.
+Shortcuts: **V** select, **C** cloud, **D** device, **N** note, **Ctrl+Z** undo, **Escape** select. Roll the mouse wheel over either drawing to zoom around the cursor (25%–600%). Zoom and fit controls are in the drawing toolbar. Use the drawing scrollbars or Shift+wheel to pan; horizontal trackpad scrolling also pans. A sheet selector remains available below the drawing on smaller screens. **New comparison** is in the compact top header.
+
+## Electrical revision impact
+
+The **Impact** tab tracks reviewer-confirmed electrical changes between one original/revised PDF pair. It does not recognize symbols, read schedules, compare schedule values, or approve the design.
+
+1. Choose **New electrical change**, or select a cloud/device and choose **Track electrical impact**. A cloud or marker creates a starting draft, never a confirmed electrical finding.
+2. Enter one device group per circuit: device type, quantity, separate panel/circuit fields, and optional VA per device. Leave VA blank when unknown; enter zero only when it is actually zero. Takeoff-marker defaults do not automatically become impact loads.
+3. Choose **Added**, **Removed**, **Relocated**, **Reassigned**, or **Modified**. Added groups need revised evidence; removed groups need original evidence; the other types need both. Use the evidence picker to select any page and drag a rectangle. Page numbers and locations can differ between documents.
+4. **Save draft** retains incomplete work without contributing to totals. **Confirm change** requires quantities, assignments and evidence. Relocated groups retain their device data and assignment; reassigned groups retain device data but change assignment. Use Modified for other before/after changes.
+5. Circuit summaries show signed device and connected-VA changes across confirmed records. Reassignments subtract from the old circuit and add to the new one. Relocations have zero numeric impact. Unknown VA produces an incomplete summary with a known subtotal; these are change totals, not complete circuit loads, and they remain separate from Electrical takeoff.
+6. Each affected circuit receives a panel-schedule review task. **Link schedule location** connects a row or region within the loaded PDFs. **Manage references** can also link single-line areas to panels. References may have original, revised, or both locations; missing locations stay visible.
+7. Open **Review task** to inspect the contributing changes and reference crops. **Checked** requires a linked reference and records your acknowledgement only. **Not applicable** requires a reason. Edits to confirmed changes and linked references reopen affected tasks; unrelated completed reviews are retained. Cloud review status is independent.
+8. Export **Electrical impact CSV** from the Impact tab or Export review menu for change rows, circuit deltas, evidence coordinates and review outcomes. Existing reviewed-PDF and takeoff-register exports retain their original purpose; the PDF does not contain the impact checklist.
+
+Undo covers annotations and electrical impact data together. Deleting a source cloud or marker preserves its impact record and captured evidence. Replacing the original PDF clears electrical impacts/references after confirmation and retains revised markups; replacing the revised PDF clears both. Save before replacing files or closing the app.
 
 ## Practical limits
 
@@ -37,6 +52,8 @@ Shortcuts: **V** select, **C** cloud, **D** device, **N** note, **Ctrl+Z** undo,
 
 - `src/app.js`: review state, UI, tools, page pairing and local import/export.
 - `src/core.js`: pure pixel difference, cloud geometry, CSV safety and load arithmetic.
+- `src/impact.js`: pure impact model, circuit deltas, linked tasks, review compatibility and impact CSV.
+- `src/impact-ui.js`: change/reference dialogs, manual evidence selection and impact review workflow.
 - `src/pdf.js`: PDF.js rendering, file fingerprinting and pdf-lib raster export.
 - `src/demo.js`: deterministic sample PDFs, marked not for construction.
 - `tests/`: focused algorithms and sample-PDF checks.

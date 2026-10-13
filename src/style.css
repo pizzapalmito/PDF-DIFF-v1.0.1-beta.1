@@ -19,3 +19,90 @@
 .drawing-stage{padding:38px 12px 16px}.stage-label{top:12px;left:12px}
 .expanded-workspace .sheets-panel,.expanded-workspace .review-panel,.expanded-workspace .workspace-heading,.expanded-workspace .rail{display:none}
 .expanded-workspace .shell{margin-left:0}.expanded-workspace .workspace{display:grid;grid-template-columns:minmax(0,1fr);height:calc(100dvh - 62px);min-height:0;margin:0 4px}.expanded-workspace .main-panel{height:auto}
+
+/* Keep the header and controls compact so the drawings fill the viewport. */
+.topbar{height:48px;gap:8px;padding:0 12px;flex-shrink:0}
+.topbar .button{min-height:32px;padding:6px 10px}
+.wordmark .demo-tag{margin-left:16px;font-family:'DM Sans Variable',Arial,sans-serif;letter-spacing:.9px}
+.file-row{padding:6px 10px}
+.file-card{padding:6px 8px}
+.file-info{flex-direction:row;align-items:center;gap:8px}
+.file-info .eyebrow{white-space:nowrap}
+.file-info strong{max-width:100%;min-width:0}
+.file-symbol{height:28px;width:24px}
+.comparison-toolbar{padding:0 10px 4px}
+.canvas-toolbar{height:36px;padding:3px 10px}
+.canvas-info{min-height:26px;padding:4px 10px}
+.drawing-stage{padding-top:30px;overscroll-behavior:contain;scrollbar-gutter:stable}
+.stage-label{top:9px}
+.breadcrumb,.app-footer{display:none}
+@media(min-width:721px){
+  .shell{height:100dvh;display:flex;flex-direction:column}
+  .workspace{height:auto;flex:1;min-height:0;margin-bottom:8px}
+  .expanded-workspace .workspace{height:auto;margin-bottom:4px}
+}
+@media(min-width:721px) and (max-width:980px){
+  .workspace{grid-template-columns:minmax(0,1fr) 240px}
+  .sheets-panel{display:none}
+}
+@media(max-width:1190px){.file-info{flex-direction:column;align-items:flex-start;gap:2px}}
+@media(max-width:720px){
+  .topbar{padding:0 8px}
+  .topbar .button{padding:6px}
+  .workspace{margin-top:0}
+  .main-panel{height:calc(100dvh - 58px);min-height:440px}
+  .expanded-workspace .main-panel{min-height:0}
+  .canvas-toolbar{height:auto;min-height:36px;flex-wrap:wrap;row-gap:3px}
+  .zoom-tools{margin-left:auto}
+}
+
+/* Electrical impact forms stay in dialogs; the drawing workspace keeps its height. */
+.review-tabs{gap:14px;padding:0 14px}
+.review-tabs button{white-space:nowrap}
+.impact-intro h3,.impact-section h3{font-size:13px;margin:0 0 8px}
+.impact-intro p,.impact-empty{font-size:12px;line-height:1.5;color:#657466;margin:0 0 12px}
+.impact-counts{display:flex;justify-content:space-between;gap:8px;margin:16px 0;font-size:10px;color:#657466}
+.impact-counts span{display:flex;flex-direction:column;gap:4px}
+.impact-counts strong{font-size:21px;color:#254a38}
+.impact-section{margin:18px 0}
+.impact-card{border:1px solid #dce5d7;border-radius:7px;padding:11px;margin:8px 0;font-size:12px;overflow-wrap:anywhere}
+.impact-card strong,.impact-card span,.impact-card small{display:block}
+.impact-card strong{font-size:12px}
+.impact-card p{line-height:1.45;margin:7px 0;color:#5c705b}
+.impact-card small{font-size:10px;color:#69796b;margin-top:6px}
+.impact-record{width:100%;text-align:left;background:#fff}
+.impact-record span{font-size:11px;color:#62745f;margin-top:6px}
+.impact-va{font-weight:600}
+.impact-status{font-size:11px;color:#367348;margin-top:6px}
+.impact-status.pending{color:#8b621d}
+.impact-task .button{margin-top:6px;white-space:normal}
+.impact-actions{display:grid;gap:8px;margin:16px 0}
+.impact-side-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.impact-side-grid>.impact-side:only-child{grid-column:1/-1}
+.impact-side{min-width:0;border:1px solid #d8e3d2;border-radius:8px;padding:12px}
+.impact-side legend{padding:0 5px;font-size:12px;font-weight:650}
+.impact-side .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.impact-side input,.impact-side select,.form-grid input,.form-grid select{min-width:0;width:100%}
+.optional-label{font-size:11px;font-weight:400;color:#647564}
+.evidence-action{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;font-size:11px}
+.evidence-action>span{width:100%;color:#5c705b}
+.impact-editor-actions{flex-wrap:wrap}
+.impact-side p{font-size:12px;line-height:1.5;margin-bottom:10px}
+#dialog{max-height:calc(100dvh - 32px);overflow:auto}
+#dialog.wide{width:780px}
+.evidence-picker-paper{position:relative;background:white;border:1px solid #dce5d7;margin:12px 0;line-height:0}
+.evidence-picker-paper canvas{width:100%;height:auto;display:block}
+.evidence-picker-paper svg{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+#evidence-loading{font-size:12px;color:#5f735c;margin:10px 0}
+.evidence-crops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.evidence-crops figure{margin:0;min-width:0}
+.evidence-crops figcaption{font-size:12px;font-weight:600;margin:8px 0}
+.evidence-crop{border:1px solid #dce5d7;padding:6px;font-size:12px;overflow:auto}
+.evidence-crop canvas{display:block;width:100%;height:auto}
+.impact-reference-list{margin-top:16px}
+#impact-error{background:#fff0ed;border:1px solid #e3b4ac;border-radius:6px;color:#953c30;padding:10px;margin:10px 0;font-size:12px;line-height:1.5}
+@media(max-width:620px){
+  #dialog{padding:16px}
+  .impact-side-grid,.evidence-crops{grid-template-columns:minmax(0,1fr)}
+  .impact-editor-actions .button{flex:1}
+}
