@@ -2,6 +2,8 @@
 
 A local drawing-comparison and electrical coordination app. PDFs and annotations are processed in the browser; nothing is uploaded. Fonts, PDF rendering workers, and dependencies are bundled locally.
 
+Current app version: **1.1.0-beta.1**. The user-selected **Revision bench** layout keeps sheets, the drawing and a ruled change register together. The compact graphite header and amber selection controls leave red and blue for drawing differences. See [UI-DESIGN.md](UI-DESIGN.md), [CHANGELOG.md](CHANGELOG.md), and [VERSIONING.md](VERSIONING.md).
+
 ## Open the app
 
 Double-click **Start-PDF-DIFF.cmd**, or run `npm start`, then open http://127.0.0.1:4321. Keep the server window open. The app requires Node.js 20.15 or newer; dependencies and the production build are already present in this workspace. If the preview is already running on port 4321, simply open that URL.
@@ -20,7 +22,7 @@ For development: `npm run dev`. Validate with `npm test` and `npm run build`.
 6. **Export review** creates either an all-sheet reviewed PDF or a CSV register containing every annotation. The reviewed PDF is a raster copy with flattened markups, not editable PDF annotations. Detailed review notes and circuit data are included in CSV/JSON; the PDF shows cloud labels, note labels and device symbols.
 7. **Save review** downloads editable markups as JSON. Keep it with the PDFs. Use the folder icon beside Drawing set to load it. The revised PDF's SHA-256 fingerprint must match, even if the filename is the same. The original PDF need not be present to restore revised-sheet markups.
 
-Shortcuts: **V** select, **C** cloud, **D** device, **N** note, **Ctrl+Z** undo, **Escape** select. Zoom and fit controls are in the drawing toolbar. A sheet selector remains available below the drawing on smaller screens.
+Shortcuts: **V** select, **C** cloud, **D** device, **N** note, **Ctrl+Z** undo, **Escape** select. Zoom is relative to the whole-page fitted size; **Fit** resets it to 100%. Split fits both complete pages. A sheet selector remains available below the drawing on smaller screens. Selected cloud properties appear above the register rows.
 
 ## Practical limits
 
@@ -37,6 +39,7 @@ Shortcuts: **V** select, **C** cloud, **D** device, **N** note, **Ctrl+Z** undo,
 - `src/core.js`: pure pixel difference, cloud geometry, CSV safety and load arithmetic.
 - `src/pdf.js`: PDF.js rendering, file fingerprinting and pdf-lib raster export.
 - `src/demo.js`: deterministic sample PDFs, marked not for construction.
+- `src/view.js`: whole-sheet and paired-sheet fit calculations, independent of PDF/annotation coordinates.
 - `tests/`: focused algorithms and sample-PDF checks.
 
 Primary library references: [PDF.js](https://mozilla.github.io/pdf.js/getting_started/) and [pdf-lib](https://pdf-lib.js.org/docs/api/classes/pdfdocument).

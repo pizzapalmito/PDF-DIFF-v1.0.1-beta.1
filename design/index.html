@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF DIFF — Three directions</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #242b29; background: #f3f4f1; font: 14px system-ui, sans-serif; }
+    header { padding: 24px 28px 18px; border-bottom: 1px solid #cdd2ca; background: #fff; }
+    .eyebrow { color: #59635d; font: 11px Consolas,monospace; letter-spacing: 1px; }
+    h1 { font-size: 24px; margin: 8px 0; letter-spacing: -.7px; }
+    p { margin: 0; line-height: 1.6; color: #59635d; }
+    nav { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 0; padding: 0 28px; background: white; }
+    button { cursor: pointer; border: 0; border-bottom: 3px solid transparent; background: none; text-align: left; padding: 17px 18px; font: inherit; color: #59635d; }
+    button.active { color: #242b29; background: #f1f2ee; border-bottom-color: #61511f; }
+    button:focus-visible, a:focus-visible { outline: 3px solid #916e0c; outline-offset: -3px; }
+    button strong { display: block; font-size: 14px; margin-bottom: 5px; }
+    button span { font-size: 12px; }
+    .description { padding: 15px 28px; display: flex; gap: 24px; align-items: center; border-bottom: 1px solid #cdd2ca; }
+    .description p { flex: 1; font-size: 12px; }
+    a { color: #493d15; font-size: 12px; white-space: nowrap; }
+    iframe { display: block; width: 100%; height: calc(100dvh - 262px); min-height: 650px; border: 0; background: #fff; }
+    @media(max-width:620px) { header { padding: 18px; } nav { padding: 0; } button { padding: 14px 10px; } button span { font-size: 10px; } .description { padding: 12px 18px; align-items: start; gap: 12px; } iframe { min-height: 800px; } }
+  </style>
+</head>
+<body>
+  <header><div class="eyebrow">PDF DIFF / ART DIRECTION / 29 OCT 2026</div><h1>A workspace for finding what changed.</h1><p>Revision bench was selected and is now in the main app. These working studies preserve the three alternatives.</p></header>
+  <nav aria-label="Design directions">
+    <button class="active" data-direction="bench" aria-pressed="true"><strong>A / Revision bench</strong><span>Recommended · balanced drawing + register</span></button>
+    <button data-direction="ledger" aria-pressed="false"><strong>B / Review ledger</strong><span>Review-first · changes lead the workspace</span></button>
+    <button data-direction="table" aria-pressed="false"><strong>C / Light table</strong><span>Drawing-first · register docks below</span></button>
+  </nav>
+  <div class="description"><p id="rationale">A compact graphite header, indexed sheets and an amber selection system frame the drawing. A quiet, ruled register keeps every review decision alongside its evidence. Tradeoff: three columns use more width.</p><a id="open" href="./preview.html?direction=bench" target="_blank">Open full workspace ↗</a></div>
+  <iframe title="Interactive PDF DIFF design study" src="./preview.html?direction=bench"></iframe>
+  <script>
+    const descriptions = {
+      bench: 'A compact graphite header, indexed sheets and an amber selection system frame the drawing. A quiet, ruled register keeps every review decision alongside its evidence. Tradeoff: three columns use more width.',
+      ledger: 'A light, plum-accented review ledger leads from the left; sheets become a horizontal index above the drawing. Good for working through each cloud methodically. Tradeoff: the drawing has less vertical space.',
+      table: 'A charcoal light table starts with paired drawings side by side. Sheets sit above them; a shallow change register docks below. Good for scanning both revisions. Tradeoff: the lower dock reduces drawing height and needs more scrolling for detailed edits.'
+    };
+    document.querySelectorAll('[data-direction]').forEach(button => button.addEventListener('click', () => {
+      document.querySelectorAll('[data-direction]').forEach(item => { item.classList.toggle('active', item === button); item.setAttribute('aria-pressed', String(item === button)); });
+      const url = './preview.html?direction=' + button.dataset.direction;
+      document.querySelector('iframe').src = url;
+      document.querySelector('#open').href = url;
+      document.querySelector('#rationale').textContent = descriptions[button.dataset.direction];
+    }));
+  </script>
+</body>
+</html>
